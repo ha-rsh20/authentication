@@ -6,6 +6,9 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import TextField from "@mui/material/TextField";
+import { Button, ThemeProvider } from "@mui/material";
+import { theme } from "../mui_style";
 
 function Authentication(props) {
   const [boxValue, setBoxValue] = useState(
@@ -222,135 +225,157 @@ function Authentication(props) {
           <div
             style={{
               borderRadius: "7px",
-              boxShadow: "0px 2px 20px 5px",
+              boxShadow: "0px 10px 30px -5px #2b0000",
               padding: 10,
             }}
           >
-            <Box style={{ marginBottom: 8 }}>
-              <Tabs value={boxValue} onChange={handleBoxValueChange}>
-                <Tab value="register" label="Register" />
-                <Tab value="login" label="Login" />
-              </Tabs>
-            </Box>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              {boxValue === "register" ? (
-                <>
-                  <input
-                    type="text"
-                    placeholder="enter firstname"
-                    style={{ margin: 3 }}
-                    value={firstname}
-                    onChange={(e) => {
-                      setFirstName(e.target.value);
-                    }}
-                    required
-                  />
-                  <input
-                    type="text"
-                    placeholder="enter lastname"
-                    style={{ margin: 3 }}
-                    value={lastname}
-                    onChange={(e) => {
-                      setLastName(e.target.value);
-                    }}
-                    required
-                  />
-                </>
-              ) : (
-                <></>
-              )}
-              <input
-                type="email"
-                placeholder="enter email"
-                style={{ margin: 3 }}
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
+            <ThemeProvider theme={theme}>
+              <Box
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  marginBottom: 8,
                 }}
-                disabled={emailAuth}
-                required
-              />
-              {emailAuth === true || boxValue === "login" ? (
-                <input
-                  type="password"
-                  placeholder="enter password"
+              >
+                <Tabs value={boxValue} onChange={handleBoxValueChange}>
+                  <Tab value="register" label="Register" />
+                  <Tab value="login" label="Login" />
+                </Tabs>
+              </Box>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                {boxValue === "register" ? (
+                  <>
+                    <TextField
+                      type="text"
+                      variant="outlined"
+                      label="Firstname"
+                      placeholder="enter firstname"
+                      style={{ margin: 3 }}
+                      value={firstname}
+                      onChange={(e) => {
+                        setFirstName(e.target.value);
+                      }}
+                      required
+                    />
+                    <TextField
+                      type="text"
+                      variant="outlined"
+                      label="Lastname"
+                      placeholder="enter lastname"
+                      style={{ margin: 3 }}
+                      value={lastname}
+                      onChange={(e) => {
+                        setLastName(e.target.value);
+                      }}
+                      required
+                    />
+                  </>
+                ) : (
+                  <></>
+                )}
+                <TextField
+                  type="email"
+                  variant="outlined"
+                  label="Email"
+                  placeholder="enter email"
                   style={{ margin: 3 }}
-                  value={password}
+                  value={email}
                   onChange={(e) => {
-                    setPassword(e.target.value);
+                    setEmail(e.target.value);
                   }}
+                  disabled={emailAuth}
                   required
                 />
-              ) : (
-                sOTP && (
-                  <input
-                    type="text"
-                    placeholder="enter otp"
-                    style={{ margin: 3 }}
-                    value={otp}
-                    onChange={(e) => {
-                      setOTP(e.target.value);
-                    }}
-                    required
-                  />
-                )
-              )}
-              {emailAuth && boxValue === "register" ? (
-                <>
-                  <input
+                {emailAuth === true || boxValue === "login" ? (
+                  <TextField
                     type="password"
-                    placeholder="confirm password"
+                    variant="outlined"
+                    label="Password"
+                    placeholder="enter password"
                     style={{ margin: 3 }}
+                    value={password}
                     onChange={(e) => {
-                      if (password === e.target.value) {
-                        setErr(true);
-                      } else {
-                        setErr(false);
-                      }
+                      setPassword(e.target.value);
                     }}
                     required
                   />
-                </>
-              ) : (
-                <></>
-              )}
-              {boxValue === "login" && (
-                <a onClick={handlePasswordReset}>
-                  <i>
-                    <u>forget password</u>
-                  </i>
-                </a>
-              )}
-            </div>
-            <button
-              type="submit"
-              onClick={
-                boxValue !== "register"
-                  ? onLogin
+                ) : (
+                  sOTP && (
+                    <TextField
+                      type="text"
+                      variant="outlined"
+                      placeholder="enter otp"
+                      style={{ margin: 3 }}
+                      value={otp}
+                      onChange={(e) => {
+                        setOTP(e.target.value);
+                      }}
+                      required
+                    />
+                  )
+                )}
+                {emailAuth && boxValue === "register" ? (
+                  <>
+                    <TextField
+                      type="password"
+                      variant="outlined"
+                      label="Confirm Password"
+                      placeholder="confirm password"
+                      style={{ margin: 3 }}
+                      onChange={(e) => {
+                        if (password === e.target.value) {
+                          setErr(true);
+                        } else {
+                          setErr(false);
+                        }
+                      }}
+                      required
+                    />
+                  </>
+                ) : (
+                  <></>
+                )}
+                {boxValue === "login" && (
+                  <a onClick={handlePasswordReset}>
+                    <i>
+                      <u>forget password</u>
+                    </i>
+                  </a>
+                )}
+              </div>
+              <Button
+                type="submit"
+                variant="contained"
+                onClick={
+                  boxValue !== "register"
+                    ? onLogin
+                    : emailAuth
+                    ? onRegister
+                    : sOTP
+                    ? verifyOTP
+                    : authenticateEmail
+                }
+                style={{ margin: 10 }}
+                disabled={
+                  boxValue === "register" ? (emailAuth ? !err : false) : false
+                }
+              >
+                {boxValue !== "register"
+                  ? "Login"
                   : emailAuth
-                  ? onRegister
+                  ? "Register"
                   : sOTP
-                  ? verifyOTP
-                  : authenticateEmail
-              }
-              disabled={
-                boxValue === "register" ? (emailAuth ? !err : false) : false
-              }
-            >
-              {boxValue !== "register"
-                ? "Login"
-                : emailAuth
-                ? "Register"
-                : sOTP
-                ? "Verify"
-                : "Get OTP"}
-            </button>
-            <ToastContainer />
+                  ? "Verify"
+                  : "Get OTP"}
+              </Button>
+              <ToastContainer />
+            </ThemeProvider>
           </div>
         </div>
       </form>

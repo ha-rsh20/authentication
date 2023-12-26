@@ -2,6 +2,9 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import TextField from "@mui/material/TextField";
+import { Button, ThemeProvider } from "@mui/material";
+import { theme } from "../mui_style";
 
 function PasswordReset(props) {
   const { cemail } = useLocation();
@@ -13,13 +16,24 @@ function PasswordReset(props) {
   const navigate = useNavigate();
 
   const getPasswordChangeOTP = (e) => {
-    setSOTP(true);
     e.preventDefault();
     axios
       .get(`http://localhost:4000/auth/sendMail/${email}/1`)
       .then((res) => {
         if (res.status === 200) {
+          setSOTP(true);
           toast.success("Check your mail, OTP sent for password change!", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        } else if (res.status === 204) {
+          toast.error("Email not found!", {
             position: "top-right",
             autoClose: 3000,
             hideProgressBar: false,
@@ -128,53 +142,63 @@ function PasswordReset(props) {
               flexDirection: "column",
               justifyItems: "center",
               alignItems: "center",
-              boxShadow: "0px 2px 20px 5px",
+              boxShadow: "0px 10px 30px -5px #2b0000",
               padding: 10,
             }}
           >
-            <input
-              type="email"
-              placeholder="enter email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-              required
-            />
-            {sOTP && !emailAuth && (
-              <input
-                type="text"
-                placeholder="enter OTP"
-                value={otp}
+            <ThemeProvider theme={theme}>
+              <TextField
+                type="email"
+                variant="outlined"
+                label="Email"
+                placeholder="enter email"
+                value={email}
                 onChange={(e) => {
-                  setOTP(e.target.value);
+                  setEmail(e.target.value);
                 }}
                 required
               />
-            )}
-            {emailAuth && (
-              <input
-                type="password"
-                placeholder="enter password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-                required
-              />
-            )}
-            <button
-              onClick={
-                !sOTP
-                  ? getPasswordChangeOTP
-                  : emailAuth
-                  ? resetPassword
-                  : verifyOTP
-              }
-              type="submit"
-            >
-              {!sOTP ? "Get OTP" : emailAuth ? "Reset" : "Verify"}
-            </button>
+              {sOTP && !emailAuth && (
+                <TextField
+                  type="text"
+                  variant="outlined"
+                  label="OTP"
+                  placeholder="enter OTP"
+                  value={otp}
+                  onChange={(e) => {
+                    setOTP(e.target.value);
+                  }}
+                  required
+                />
+              )}
+              {emailAuth && (
+                <TextField
+                  type="password"
+                  variant="outlined"
+                  label="Password"
+                  placeholder="enter password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                  required
+                />
+              )}
+              <Button
+                variant="contained"
+                onClick={
+                  !sOTP
+                    ? getPasswordChangeOTP
+                    : emailAuth
+                    ? resetPassword
+                    : verifyOTP
+                }
+                type="submit"
+                style={{ margin: 10 }}
+              >
+                {!sOTP ? "Get OTP" : emailAuth ? "Reset" : "Verify"}
+              </Button>
+            </ThemeProvider>
           </div>
           <ToastContainer />
         </div>
