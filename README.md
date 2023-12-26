@@ -10,6 +10,12 @@ I used below dependencies:
 <h5>react-toastify(9.1.3): to provide toast messages,</h5>
 <h5>axios(1.4.0): to make frontend able to communicate with backend</h5>
 
+## Features:
+### 1: Secure password,
+### 2: Email verification,
+### 3: Password reset,
+### 4: Secure web application(Limited time access),
+
 ## Run `npm install` command to download all dependencies automatically
 
 ## Run `npm start` command to run frontend part of the project
