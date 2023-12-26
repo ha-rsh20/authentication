@@ -4,7 +4,7 @@
 
 ## Dependencies (extra dependencies than react)
 
-To complete the project i used below dependencies:
+I used below dependencies:
 <h5>mui(5.14.10): to enhance user interface,</h5>
 <h5>react-router-dom(6.16.0): to navigate between modules,</h5>
 <h5>react-toastify(9.1.3): to provide toast messages,</h5>
